@@ -13,7 +13,7 @@ class Sack:
         return self.sum > other.sum
 
     def __repr__(self):
-        return str(self.sum) + ': ' + str(self.contents)
+        return str(self.sum)
 
 
 def read_inventory_file(fpath: str):
@@ -30,9 +30,16 @@ def read_inventory_file(fpath: str):
             sacks.append(Sack(contents))
             contents = []
 
+    else:
+        sacks.append(Sack(contents))
+
     return sacks
 
 
 if __name__ == '__main__':
     results = read_inventory_file('input.txt')
+
     print(max(results))
+
+    print(sum([x.sum for x in sorted(results)[-3:]]))
+    print([x.sum for x in sorted(results)[-3:]])
