@@ -1,35 +1,37 @@
-
-
-
 LETTER_MATCH = {
-    'A': 'X', # rock
-    'B': 'Y', # paper
-    'C': 'Z'  # scissors
+    'A': 'ROCK',
+    'B': 'PAPER',
+    'C': 'SCISSORS',
+    'X': 'ROCK',
+    'Y': 'PAPER',
+    'Z': 'SCISSORS'
 }
 
 SHAPE_POINTS = {
-    'X': 1, # rock
-    'Y': 2, # paper
-    'Z': 3  # scissors
+    'ROCK': 1,
+    'PAPER': 2,
+    'SCISSORS': 3
 }
+
 
 class Shape:
     def __init__(self, letter: str):
-        self.letter = LETTER_MATCH.get(letter, letter)
-        self.points = SHAPE_POINTS[self.letter]
+        self.shape = LETTER_MATCH[letter]
+        self.points = SHAPE_POINTS[self.shape]
 
-    def throw(self, other):
-        if self.letter == other.letter:
+    def resolve(self, other):
+        if self.shape == other.shape:
             return 3
-        elif self.letter == 'X':
-            return 6 if other.letter == 'Z' else 0
-        elif self.letter == 'Y':
-            return 6 if other.letter == 'X' else 0
+        elif self.shape == 'ROCK':
+            return 6 if other.shape == 'SCISSORS' else 0
+        elif self.shape == 'PAPER':
+            return 6 if other.shape == 'ROCK' else 0
         else:
-            return 6 if other.letter == 'Y' else 0
+            return 6 if other.shape == 'PAPER' else 0
 
     def score(self, other):
-        return self.throw(other) + self.points
+        return self.resolve(other) + self.points
+
 
 
 def main(fpath: str):
