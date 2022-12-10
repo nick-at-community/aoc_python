@@ -28,13 +28,28 @@ def parse_instructions(instruction_text: str):
         in instruction_text.split('\n')[:-1]
     ]
 
-def apply_instructions(stacks, instructions):
+def apply_instructions_by_ones(stacks, instructions):
     for step in instructions:
         boxes, from_, to_ = step
 
         for box in range(boxes):
             temp = stacks[from_].popleft()
             stacks[to_].appendleft(temp)
+
+    return stacks
+
+def apply_instructions_by_heap(stacks, instructions):
+    for step in instructions:
+        boxes, from_, to_ = step
+
+        heap = [
+            stacks[from_].popleft()
+            for boxes
+            in range(boxes)
+        ]
+
+        for box in heap[::-1]:
+            stacks[to_].appendleft(box)
 
     return stacks
 
@@ -48,7 +63,7 @@ def part_one():
         stacks = parse_setup(setup)
         instructions = parse_instructions(instruction_text)
 
-        result = apply_instructions(stacks, instructions)
+        result = apply_instructions_by_ones(stacks, instructions)
 
         return ''.join([
             result[key].popleft()
@@ -60,6 +75,18 @@ def part_two():
     with open('input.txt') as f:
         data = f.read()
 
+        setup, instruction_text = data.split('\n\n')
+
+        stacks = parse_setup(setup)
+        instructions = parse_instructions(instruction_text)
+
+        result = apply_instructions_by_heap(stacks, instructions)
+
+        return ''.join([
+            result[key].popleft()
+            for key
+            in sorted(result.keys())
+        ])
 
 
 def main():
