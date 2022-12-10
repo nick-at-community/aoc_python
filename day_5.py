@@ -3,21 +3,17 @@ import re
 
 
 def parse_setup(setup: str):
-    stacks = {
-        1: deque(),
-        2: deque(),
-        3: deque()
-    }
+    stacks = dict()
 
-    for line in setup.split('\n')[:-1]:
-        if left := re.search('[A-Z]', line[:4]):
-            stacks[1].append(left.group())
+    for line in setup.split('\n'):
+        crates_in_this_line = len(line) // 4 + 1
 
-        if center := re.search('[A-Z]', line[4:8]):
-            stacks[2].append(center.group())
+        for idx, stack in enumerate(range(1, crates_in_this_line + 1)):
+            content = line[idx * 4 : ((idx + 1) * 4)]
 
-        if right := re.search('[A-Z]', line[8:]):
-            stacks[3].append(right.group())
+            if match := re.search('[A-Z]', content):
+                stacks[stack] = stacks.get(stack, deque())
+                stacks[stack].append(match.group())
 
     return stacks
 
@@ -52,7 +48,13 @@ def part_one():
         stacks = parse_setup(setup)
         instructions = parse_instructions(instruction_text)
 
-        return apply_instructions(stacks, instructions)
+        result = apply_instructions(stacks, instructions)
+
+        return ''.join([
+            result[key].popleft()
+            for key
+            in sorted(result.keys())
+        ])
 
 def part_two():
     with open('input.txt') as f:
