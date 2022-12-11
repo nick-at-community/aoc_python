@@ -1,19 +1,20 @@
 
 
-def part_one():
-    with open('input.txt') as f:
+def part_one(fpath: str):
+    with open(fpath) as f:
         data = f.read()
 
-def part_two():
-    with open('input.txt') as f:
+def part_two(fpath: str):
+    with open(fpath) as f:
         data = f.read()
 
 
 
-def main():
-    print(part_one())
-    print(part_two())
+def main(fpath: str):
+    print(part_one(fpath))
+    print(part_two(fpath))
 
 
 if __name__ == '__main__':
-    main()
+    main('prompt.txt')
+    # main('input.txt')
