@@ -10,6 +10,7 @@ def build_files_and_dirs() -> Tuple[Dict[str, int], Set]:
 
     pwd = '/'
     in_ls = False
+    # shout out to https://www.twitch.tv/codewithanthony
     for line in data.splitlines()[1:]:
         if in_ls and line.startswith('$'):
             in_ls = False
