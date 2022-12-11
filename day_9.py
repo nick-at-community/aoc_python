@@ -29,9 +29,13 @@ def move_segment(segment_idx: int, tail_idx: int):
     elif d == sqrt(2): # diag is still legal
         pass
     elif d == 2: # straight line follow
+        tmp = snake[segment_idx]
         snake[segment_idx] = last_segment_pos
+        last_segment_pos = tmp
     else: # catch up diag move
+        tmp = snake[segment_idx]
         snake[segment_idx] = last_segment_pos
+        last_segment_pos = tmp
 
     tail_visited.add(tuple(snake[tail_idx]))
 
@@ -61,14 +65,14 @@ def part_one(fpath: str):
     return len(tail_visited)
 
 def part_two(fpath: str):
-    global head_pos, last_head_pos, tail_pos, tail_visited
+    global snake, last_segment_pos, tail_visited
 
     with open(fpath) as f:
         data = f.read()
 
+    tail_idx = 9
     tail_visited = set()
-
-    tail_pos = [0, 0]
+    snake = {x: [0, 0] for x in range(10)}
 
     for step in data.splitlines():
         dir, amt = step.split()
@@ -76,18 +80,17 @@ def part_two(fpath: str):
 
         amt = int(amt)
         for tick in range(amt):
-            last_head_pos = head_pos
+            last_segment_pos = snake[0]
             move_head(dir)
-            move_tail()
-            print(head_pos, tail_pos)
+            for segment_idx in range(1, len(snake)):
+                move_segment(segment_idx, tail_idx)
 
     return len(tail_visited)
 
 
-
 def main(fpath: str):
-    print(part_one(fpath))
-    # print(part_two(fpath))
+    # print(part_one(fpath))
+    print(part_two(fpath))
 
 
 if __name__ == '__main__':
