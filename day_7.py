@@ -59,15 +59,33 @@ def part_one():
     )
 
 def part_two():
-    with open('input.txt') as f:
-        data = f.read()
+    global files, dirs
+    MAX = 70000000
+    NEED = 30000000
 
+    files, dirs = build_files_and_dirs()
+
+    sizes = [
+        calc_dirsize(dirname)
+        for dirname
+        in dirs
+    ]
+
+    TOTAL = calc_dirsize('/')
+    TARGET = (TOTAL + NEED) - MAX
+
+    return sorted(
+        size
+        for size
+        in sizes
+        if size >= TARGET
+    )[0]
 
 
 def main():
-    print(part_one())
+    print(part_one(), '\n')
     print(part_two())
 
 
 if __name__ == '__main__':
-    print(part_one())
+    main()
