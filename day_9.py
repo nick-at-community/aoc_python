@@ -20,24 +20,24 @@ def move_head(dir):
     else:
         snake[0] = [snake[0][0], snake[0][1] - 1]
 
-def move_tail(tail_idx: int):
-    global snake, last_head_pos, tail_visited
+def move_segment(segment_idx: int, tail_idx: int):
+    global snake, last_segment_pos, tail_visited
 
-    d = dist(snake[0], snake[tail_idx])
+    d = dist(snake[segment_idx - 1], snake[segment_idx])
     if d <= 1:
         pass
     elif d == sqrt(2): # diag is still legal
         pass
     elif d == 2: # straight line follow
-        snake[tail_idx] = last_head_pos
+        snake[segment_idx] = last_segment_pos
     else: # catch up diag move
-        snake[tail_idx] = last_head_pos
+        snake[segment_idx] = last_segment_pos
 
     tail_visited.add(tuple(snake[tail_idx]))
 
 
 def part_one(fpath: str):
-    global snake, last_head_pos, tail_visited
+    global snake, last_segment_pos, tail_visited
 
     with open(fpath) as f:
         data = f.read()
@@ -52,9 +52,10 @@ def part_one(fpath: str):
 
         amt = int(amt)
         for tick in range(amt):
-            last_head_pos = snake[0]
+            last_segment_pos = snake[0]
             move_head(dir)
-            move_tail(tail_idx)
+            for segment_idx in range(1, len(snake)):
+                move_segment(segment_idx, tail_idx)
             print(snake[0], snake[1])
 
     return len(tail_visited)
