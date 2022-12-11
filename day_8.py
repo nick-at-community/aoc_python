@@ -51,9 +51,63 @@ def part_one(fpath: str):
 
     return total
 
+##########
+
+def score_line_of_sight(val, los):
+    view_score = 0
+    for tree in los:
+        view_score += 1
+        if tree < val:
+            continue
+        else:
+            break
+    return view_score
+
+
+def calc_view_score(x, y):
+    val = topomap[x, y]
+    print(val)
+
+    view_scores = []
+
+    up = topomap[:x, y][::-1]
+    # print(up)
+    up_score = score_line_of_sight(val, up)
+    # print(up_score)
+
+    left = topomap[x, :y][::-1]
+    # print(left)
+    left_score = score_line_of_sight(val, left)
+    # print(left_score)
+
+    right = topomap[x, y+1:]
+    # print(right)
+    right_score = score_line_of_sight(val, right)
+    # print(right_score)
+
+    down = topomap[x+1:, y]
+    # print(down)
+    down_score = score_line_of_sight(val, down)
+    # print(down_score)
+
+    return up_score * left_score * right_score * down_score
+
 def part_two(fpath: str):
+    global topomap
+
     with open(fpath) as f:
-        data = f.read()
+        topomap = build_topomap(f.read())
+
+    x_lim, y_lim = topomap.shape
+
+    max_ = 0
+    for x in range(1, x_lim -1):
+        for y in range(1, y_lim -1):
+            val = calc_view_score(x, y)
+            if val > max_:
+                max_ = val
+
+    return max_
 
 
 
