@@ -1,4 +1,7 @@
+from itertools import islice
+import numpy as np
 
+np.set_printoptions(linewidth=180)
 
 def part_one(fpath: str):
     with open(fpath) as f:
