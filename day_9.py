@@ -1,5 +1,9 @@
+import numpy as np
+
 from math import sqrt
 
+
+np.set_printoptions(linewidth=160)
 
 def dist(head, tail):
     head_x, head_y = head
@@ -39,6 +43,21 @@ def move_segment(segment_idx: int, tail_idx: int):
 
     tail_visited.add(tuple(snake[tail_idx]))
 
+def debug_state():
+    global snake
+    debug = np.full((30, 30), '.')
+    origin_x = 15
+    origin_y = 15
+
+    for segment in snake:
+        debug[
+            origin_x + snake[segment][0],
+            origin_y + snake[segment][1]
+        ] = segment
+
+    print(debug)
+    print()
+
 
 def part_one(fpath: str):
     global snake, last_segment_pos, tail_visited
@@ -74,7 +93,7 @@ def part_two(fpath: str):
     tail_visited = set()
     snake = {x: [0, 0] for x in range(10)}
 
-    for step in data.splitlines():
+    for i, step in enumerate(data.splitlines()):
         dir, amt = step.split()
         print(dir, amt)
 
@@ -82,8 +101,10 @@ def part_two(fpath: str):
         for tick in range(amt):
             last_segment_pos = snake[0]
             move_head(dir)
+            debug_state()
             for segment_idx in range(1, len(snake)):
                 move_segment(segment_idx, tail_idx)
+                debug_state()
 
     return len(tail_visited)
 
