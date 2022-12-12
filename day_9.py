@@ -25,26 +25,30 @@ def move_head(dir):
         snake[0] = [snake[0][0], snake[0][1] - 1]
 
 def move_segment(segment_idx: int, tail_idx: int):
-    global snake, last_segment_pos, tail_visited
+    global snake, tail_visited
 
     d = dist(snake[segment_idx - 1], snake[segment_idx])
 
     ax, ay = snake[segment_idx - 1]
     bx, by = snake[segment_idx]
 
-    if d <= 1:
-        pass
-    elif d == sqrt(2): # diag is still legal
-        pass
-    elif d == 2: # straight line follow
-        tmp = snake[segment_idx]
-        snake[segment_idx] = last_segment_pos
-        last_segment_pos = tmp
-    else: # catch up diag move
+    if d == sqrt(8) or d == 2: # catch up diag move or straightline follow
         snake[segment_idx] = (
             (ax + bx) // 2,
             (ay + by) // 2
         )
+    elif abs(ax - bx) == 2: # horizontal yank
+        snake[segment_idx] = (
+            (ax + bx) // 2,
+            ay
+        )
+    elif abs(ay - by) == 2: # vertical yank
+        snake[segment_idx] = (
+            ax,
+            (ay + by) // 2
+        )
+    else: # diag 1, adjacent, or same coord
+        pass
 
     tail_visited.add(tuple(snake[tail_idx]))
 
@@ -65,7 +69,7 @@ def debug_state():
 
 
 def part_one(fpath: str):
-    global snake, last_segment_pos, tail_visited
+    global snake, tail_visited
 
     with open(fpath) as f:
         data = f.read()
@@ -76,15 +80,12 @@ def part_one(fpath: str):
 
     for step in data.splitlines():
         dir, amt = step.split()
-        print(dir, amt)
 
         amt = int(amt)
         for tick in range(amt):
-            last_segment_pos = snake[0]
             move_head(dir)
             for segment_idx in range(1, len(snake)):
                 move_segment(segment_idx, tail_idx)
-            print(snake[0], snake[1])
 
     return len(tail_visited)
 
@@ -100,7 +101,6 @@ def part_two(fpath: str):
 
     for i, step in enumerate(data.splitlines()):
         dir, amt = step.split()
-        print(dir, amt)
 
         amt = int(amt)
         for tick in range(amt):
@@ -115,10 +115,10 @@ def part_two(fpath: str):
 
 
 def main(fpath: str):
-    # print(part_one(fpath))
+    print(part_one(fpath))
     print(part_two(fpath))
 
 
 if __name__ == '__main__':
     main('prompt.txt')
-    # main('input.txt')
+    main('input.txt')
